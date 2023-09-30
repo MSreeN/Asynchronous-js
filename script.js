@@ -77,14 +77,20 @@ function renderCountry(data) {
 // const request = fetch("https://restcountries.com/v2/name/india");
 // console.log(request);
 
+// function getCountryData() {
+//   fetch("https://restcountries.com/v2/name/india").then(function (response) {
+//     console.log(response);
+//     response.json().then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+//   });
+// }
+
 function getCountryData() {
-  fetch("https://restcountries.com/v2/name/india").then(function (response) {
-    console.log(response);
-    response.json().then(function (data) {
-      console.log(data);
-      renderCountry(data[0]);
-    });
-  });
+  fetch("https://restcountries.com/v2/name/india").then((response) =>
+    response.json().then((data) => renderCountry(data[0]))
+  );
 }
 
 getCountryData();

@@ -30,31 +30,31 @@ const countriesContainer = document.querySelector(".countries");
 //     countriesContainer.style.opacity = 1;
 //   });
 // }
-function getCountryAndNeighbor(country) {
-  const request = new XMLHttpRequest();
-  request.open("GET", `https://restcountries.com/v2/name/${country}`);
-  request.send();
+// function getCountryAndNeighbor(country) {
+//   const request = new XMLHttpRequest();
+//   request.open("GET", `https://restcountries.com/v2/name/${country}`);
+//   request.send();
 
-  request.addEventListener("load", function (e) {
-    const [, data] = JSON.parse(this.responseText);
-    console.log(data);
+//   request.addEventListener("load", function (e) {
+//     const [, data] = JSON.parse(this.responseText);
+//     console.log(data);
 
-    renderCountry(data);
+//     renderCountry(data);
 
-    //request for country 2
-    const request2 = new XMLHttpRequest();
-    const [code] = data.borders;
-    request2.open("GET", `https://restcountries.com/v3.1/alpha/${code}`);
-    request2.send();
-    request2.addEventListener("load", function (e) {
-      const [data] = JSON.parse(this.responseText);
-      console.log(data);
-      // renderCountry(data);
-    });
-  });
-}
+//     //request for country 2
+//     const request2 = new XMLHttpRequest();
+//     const [code] = data.borders;
+//     request2.open("GET", `https://restcountries.com/v3.1/alpha/${code}`);
+//     request2.send();
+//     request2.addEventListener("load", function (e) {
+//       const [data] = JSON.parse(this.responseText);
+//       console.log(data);
+//       // renderCountry(data);
+//     });
+//   });
+// }
 
-getCountryAndNeighbor("india");
+// getCountryAndNeighbor("india");
 
 function renderCountry(data) {
   const html = `<article class="country">
@@ -74,5 +74,17 @@ function renderCountry(data) {
 
 ////////////Fetch api
 
-const request = fetch("https://restcountries.com/v2/name/india");
-console.log(request);
+// const request = fetch("https://restcountries.com/v2/name/india");
+// console.log(request);
+
+function getCountryData() {
+  fetch("https://restcountries.com/v2/name/india").then(function (response) {
+    console.log(response);
+    response.json().then(function (data) {
+      console.log(data);
+      renderCountry(data[0]);
+    });
+  });
+}
+
+getCountryData();

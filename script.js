@@ -87,10 +87,25 @@ function renderCountry(data) {
 //   });
 // }
 
-function getCountryData() {
-  fetch("https://restcountries.com/v2/name/india").then((response) =>
-    response.json().then((data) => renderCountry(data[0]))
-  );
+function getCountryData(country) {
+  fetch(`https://restcountries.com/v2/name/${country}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      const countryData = data[1];
+      console.log(countryData);
+      renderCountry(countryData);
+      const neighborCountry = countryData.borders[0];
+      console.log(neighborCountry);
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighborCountry}`);
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      const [countryData] = data;
+      console.log(countryData);
+      renderCountry(countryData);
+    });
 }
 
-getCountryData();
+getCountryData("india");

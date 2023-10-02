@@ -151,7 +151,7 @@ function getCountryData(country) {
     .finally((data) => console.log(data));
 }
 
-getCountryData("india");
+// getCountryData("berlin");
 
 /////////////////////////////////////////////Challenges
 
@@ -168,7 +168,7 @@ function whereAmI(lat, lng) {
   // promises to get the data. Do not use the 'getJSON' function we created, that
   // is cheating 😉
   fetch(
-    `https://api.bigdatacloud.net/dat/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
   )
     .then((response) => {
       if (!response.ok)
@@ -182,25 +182,34 @@ function whereAmI(lat, lng) {
     .then((data) => {
       console.log(data);
       console.log(`You are in ${data.city}, ${data.continent}`);
+      return data;
     })
+    // PART 2
+    // 6. Now it's time to use the received data to render a country. So take the relevant
+    // attribute from the geocoding API result, and plug it into the countries API that
+    // we have been using.
+    .then((data) => {
+      // 7. Render the country and catch any errors, just like we have done in the last
+      // lecture (you can even copy this code, no need to type the same code)
+      return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
+    })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Something wrong ${response.status}`);
+      return response.json();
+    })
+    .then((data) => renderCountry(data[1]))
     // 4. Chain a .catch method to the end of the promise chain and log errors to the
     // console
-    .catch((err) => console.error(`${err.status}`));
+    // 5. This API allows you to make only 3 requests per second. If you reload fast, you
+    // will get this error with code 403. This is an error with the request. Remember,
+    // fetch() does not reject the promise in this case. So create an error to reject
+    // the promise yourself, with a meaningful error message
+    .catch((err) => console.error(`${err.message}`));
 }
-// 5. This API allows you to make only 3 requests per second. If you reload fast, you
-// will get this error with code 403. This is an error with the request. Remember,
-// fetch() does not reject the promise in this case. So create an error to reject
-// the promise yourself, with a meaningful error message
 
-// PART 2
-// 6. Now it's time to use the received data to render a country. So take the relevant
-// attribute from the geocoding API result, and plug it into the countries API that
-// we have been using.
-// 7. Render the country and catch any errors, just like we have done in the last
-// lecture (you can even copy this code, no need to type the same code)
 // The Complete JavaScript Course 31
 // Test data:
 // § Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
-whereAmI(52.508, 13.381);
+whereAmI(19.037, 72.873);
 // § Coordinates 2: 19.037, 72.873
 // § Coordinates 3: -33.933, 18.474

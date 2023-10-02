@@ -68,9 +68,7 @@ function renderCountry(data) {
       <h3 class="country__name">${data.name}</h3>
       <h4 class="country__region">${data.region}</h4>
       <p class="country__row"><span>👫</span>POP ${data.population}</p>
-      <p class="country__row"><span>🗣️</span>${
-        Object.keys(data.languages)[0]
-      }</p>
+      <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
       <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
     </div>
   </article>`;
@@ -94,21 +92,53 @@ function renderCountry(data) {
 //   });
 // }
 
+function getJson(url, errorMsg = "Something went wrong") {
+  return fetch(url).then((response) => {
+    if (!response.ok) throw new Error(`${errorMsg} ${response.status}`);
+    return response.json();
+  });
+}
+
+// function getCountryData(country) {
+//    return fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then((response) => {
+//       if (!response.ok) throw new Error(`Country not found ${response.status}`);
+//       return response.json();
+//     })
+//     .then((data) => {
+//       const countryData = data[1];
+//       renderCountry(countryData);
+//       console.log(countryData);
+//       const neighborCountry = data[1].borders[0];
+//       console.log(neighborCountry);
+//       return fetch(`https://restcountries.com/v3.1/alpha/${neighborCountry}`);
+//     })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       const [countryData] = data;
+//       console.log(countryData);
+//       renderCountry(countryData);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       renderError(err.message);
+//     })
+//     .finally((data) => console.log(data));
+// }
+
 function getCountryData(country) {
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then((response) => {
-      if (!response.ok) throw new Error(`Country not found ${response.status}`);
-      return response.json();
-    })
+  getJson(`https://restcountries.com/v2/name/${country}`, "Country not found")
     .then((data) => {
       const countryData = data[1];
-      console.log(countryData);
       renderCountry(countryData);
-      const neighborCountry = countryData.borders[0];
+      console.log(countryData);
+      const neighborCountry = data[1].borders[0];
       console.log(neighborCountry);
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighborCountry}`);
+      return getJson(
+        `https://restcountries.com/v3.1/alpha/${neighborCountry}`,
+        "Could not find border"
+      );
     })
-    .then((response) => response.json())
     .then((data) => {
       const [countryData] = data;
       console.log(countryData);
@@ -121,4 +151,4 @@ function getCountryData(country) {
     .finally((data) => console.log(data));
 }
 
-getCountryData("intra");
+getCountryData("india");

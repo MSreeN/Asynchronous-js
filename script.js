@@ -218,5 +218,9 @@ function whereAmI(lat, lng) {
 
 console.log("hello");
 setTimeout(() => console.log("time out"), 0);
-Promise.resolve("promise data").then((res) => console.log(res));
+Promise.resolve("promise data").then((res) => {
+  for (let i = 0; i < 10; i++) {
+    console.log("promise");
+  }
+});
 console.log("world");

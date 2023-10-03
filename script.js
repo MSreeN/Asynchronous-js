@@ -210,6 +210,13 @@ function whereAmI(lat, lng) {
 // The Complete JavaScript Course 31
 // Test data:
 // § Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
-whereAmI(19.037, 72.873);
+// whereAmI(19.037, 72.873);
 // § Coordinates 2: 19.037, 72.873
 // § Coordinates 3: -33.933, 18.474
+
+//////////////////////////testing Event Loop//////////
+
+console.log("hello");
+setTimeout(() => console.log("time out"), 0);
+Promise.resolve("promise data").then((res) => console.log(res));
+console.log("world");

@@ -216,13 +216,25 @@ function whereAmI(lat, lng) {
 
 //////////////////////////testing Event Loop//////////
 
-console.log("hello");
+// console.log("hello");
 //call back function of set timeout added to call back queue
 setTimeout(() => console.log("time out"), 0);
 // call back function added to microtask queue
 Promise.resolve("promise data").then((res) => {
   for (let i = 0; i < 10; i++) {
-    console.log("promise");
+    // console.log("promise");
   }
 });
-console.log("world");
+// console.log("world");
+
+////////////////////////////Building promise
+
+const promise = new Promise(function (resolve, reject) {
+  if (Math.random() >= 0.5) {
+    resolve("you won");
+  } else {
+    reject(new Error("you lost"));
+  }
+});
+
+promise.then((res) => console.log(res)).catch((err) => console.error(err));

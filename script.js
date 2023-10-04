@@ -233,8 +233,46 @@ const promise = new Promise(function (resolve, reject) {
   if (Math.random() >= 0.5) {
     resolve("you won");
   } else {
-    reject(new Error("you lost"));
+    // reject(new Error("you lost"));
   }
 });
 
 promise.then((res) => console.log(res)).catch((err) => console.error(err));
+
+const getPosition = () => {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+function whereAmI(lat, lng) {
+  getPosition()
+    .then((data) => {
+      console.log(data);
+      const { longitude, latitude } = data.coords;
+      return fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      );
+    })
+    .then((response) => {
+      if (!response.ok)
+        throw new Error(`Could not find location ${response.status}`);
+      const convertedData = response.json();
+      return convertedData;
+    })
+    .then((data) => {
+      console.log(`You are in ${data.city}, ${data.continent}`);
+      return data;
+    })
+    .then((data) => {
+      return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
+    })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Something wrong ${response.status}`);
+      return response.json();
+    })
+    .then((data) => renderCountry(data[1]))
+    .catch((err) => console.error(`${err.message}`));
+}
+
+btn.addEventListener("click", whereAmI);

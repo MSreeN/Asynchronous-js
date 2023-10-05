@@ -308,13 +308,11 @@ function createImage(imgPath) {
 
 const wait = (seconds) => {
   return new Promise(function (resolve, reject) {
-    setTimeout(() => resolve, seconds * 1000);
+    setTimeout(resolve, seconds * 1000);
   });
 };
 
 let currentImage;
-// 3. If this part is too tricky for you, just watch the first part of the solution
-// PART 2
 // 4. Consume the promise using .then and also add an error handler
 createImage("img/img-1.jpg")
   .then((img) => {
@@ -326,13 +324,21 @@ createImage("img/img-1.jpg")
   })
   .then(() => {
     console.log("setting display");
+    // 6. After the 2 seconds have passed, hide the current image (set display CSS
+    // property to 'none'), and load a second image (Hint: Use the image element
+    // returned by the 'createImage' promise to hide the current image. You will
+    // need a global variable for that 😉)
+    currentImage.style.display = "none";
+    return createImage("img/img-2.jpg");
+  })
+  .then((img) => {
+    currentImage = img;
+    return wait(2);
+  })
+  .then(() => {
     currentImage.style.display = "none";
   })
   .catch((err) => console.error(`${err}`));
-// 6. After the 2 seconds have passed, hide the current image (set display CSS
-// property to 'none'), and load a second image (Hint: Use the image element
-// returned by the 'createImage' promise to hide the current image. You will
-// need a global variable for that 😉)
 // 7. After the second image has loaded, pause execution for 2 seconds again
 // 8. After the 2 seconds have passed, hide the current image
 // Test data: Images in the img folder. Test the error handler by passing a wrong

@@ -354,30 +354,30 @@ function getUserCoords() {
 }
 
 const whereAmIAsync = async () => {
-  try {
-    // const userLocData = await getUserCoords();
-    // const { latitude, longitude } = userLocData.coords;
-    const { latitude, longitude } = { latitude: 0, longitude: 0 };
-    const userCountryData = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-    );
-    if (!userCountryData.ok) Promise.reject("could't get user country data");
-    const userCountryDataJson = await userCountryData.json();
-    console.log(userCountryDataJson);
-    const userCountryName = userCountryDataJson.countryName;
-    const res = await fetch(
-      `https://restcountries.com/v2/name/${userCountryName}`
-    );
-    if (!res.ok) throw new Error("could not get user country name");
-    const data = await res.json();
-    renderCountry(data[1]);
-    console.log(data);
-  } catch (err) {
-    console.log(`${err.message}🥳`);
-  }
+  // const userLocData = await getUserCoords();
+  // const { latitude, longitude } = userLocData.coords;
+  const { latitude, longitude } = { latitude: 0, longitude: 0 };
+  const userCountryData = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+  );
+  if (!userCountryData.ok) Promise.reject("could't get user country data");
+  const userCountryDataJson = await userCountryData.json();
+  console.log(userCountryDataJson);
+  const userCountryName = userCountryDataJson.countryName;
+  const res = await fetch(
+    `https://restcountries.com/v2/name/${userCountryName}`
+  );
+  if (!res.ok) throw new Error("could not get user country name");
+  const data = await res.json();
+  renderCountry(data[1]);
+  console.log(data);
 };
 
-whereAmIAsync();
+whereAmIAsync()
+  .then((res) => console.log("log from then method", res))
+  .catch((err) => {
+    console.log(`error from catch, ${err}`);
+  });
 console.log("after where am i async function ");
 // const [promiseResult] = whereAmIAsync("india");
 // console.log(promiseResult);

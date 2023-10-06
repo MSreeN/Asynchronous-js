@@ -345,15 +345,31 @@ createImage("img/img-1.jpg")
 // image path. Set the network speed to “Fast 3G” in the dev tools Network tab,
 // otherwise images load too fast
 
-//////////////////////////
+//////////////////////////async and await
 
-const whereAmIAsync = async (country) => {
-  const res = await fetch(`https://restcountries.com/v2/name/${country}`);
+function getUserCoords() {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
+
+const whereAmIAsync = async () => {
+  const userLocData = await getUserCoords();
+  const { latitude, longitude } = userLocData.coords;
+  const userCountryData = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+  );
+  const userCountryDataJson = await userCountryData.json();
+  const userCountryName = userCountryDataJson.countryName;
+  const res = await fetch(
+    `https://restcountries.com/v2/name/${userCountryName}`
+  );
   const data = await res.json();
+  renderCountry(data[1]);
   console.log(data);
 };
 
-whereAmIAsync("india");
+whereAmIAsync();
 console.log("after where am i async function ");
 // const [promiseResult] = whereAmIAsync("india");
 // console.log(promiseResult);

@@ -244,7 +244,7 @@ const getPosition = () => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
-
+console.log("from getPosition ", getPosition());
 function whereAmI(lat, lng) {
   getPosition()
     .then((data) => {
@@ -344,3 +344,16 @@ createImage("img/img-1.jpg")
 // Test data: Images in the img folder. Test the error handler by passing a wrong
 // image path. Set the network speed to “Fast 3G” in the dev tools Network tab,
 // otherwise images load too fast
+
+//////////////////////////
+
+const whereAmIAsync = async (country) => {
+  const res = await fetch(`https://restcountries.com/v2/name/${country}`);
+  const data = await res.json();
+  console.log(data);
+};
+
+whereAmIAsync("india");
+console.log("after where am i async function ");
+// const [promiseResult] = whereAmIAsync("india");
+// console.log(promiseResult);

@@ -419,37 +419,58 @@ const getJSON = function (country, tag) {
   }); // prettier-ignore
 };
 
-const getMultipleCountries = async function (...arrCountries) {
-  try {
-    const promiseHelper = (name) => getJSON(name, `name`);
+// const getMultipleCountries = async function (...arrCountries) {
+//   try {
+//     const promiseHelper = (name) => getJSON(name, `name`);
 
-    const promises = [];
-    arrCountries.forEach((country) => promises.push(promiseHelper(country)));
+//     const promises = [];
+//     arrCountries.forEach((country) => promises.push(promiseHelper(country)));
 
-    const data = await (await Promise.all(promises)).flat();
-    data.forEach((country, i, arr) => (arr[i] = country.capital[0]));
-    // map didn't mutate the array which is why I use forEach()
+//     const data = await (await Promise.all(promises)).flat();
+//     data.forEach((country, i, arr) => (arr[i] = country.capital[0]));
+//     // map didn't mutate the array which is why I use forEach()
 
-    return data;
-  } catch (err) {
-    console.error(`Error occured: ${err.message}`);
-    console.error(err);
-    throw err;
-  }
-};
+//     return data;
+//   } catch (err) {
+//     console.error(`Error occured: ${err.message}`);
+//     console.error(err);
+//     throw err;
+//   }
+// };
+
+// (async function () {
+//   try {
+//     console.log(
+//       await getMultipleCountries(
+//         `portugal`,
+//         `canada`,
+//         `tanzania`,
+//         `South Africa`
+//       )
+//     );
+//   } catch {
+//     console.error(`Error occured: ${err.message}`);
+//     throw err;
+//   }
+// })();
+
+/////////////////////promise race
 
 (async function () {
-  try {
-    console.log(
-      await getMultipleCountries(
-        `portugal`,
-        `canada`,
-        `tanzania`,
-        `South Africa`
-      )
-    );
-  } catch {
-    console.error(`Error occured: ${err.message}`);
-    throw err;
-  }
+  const res = await Promise.race([
+    getJson(`https://restcountries.com/v2/name/italy`),
+    getJson(`https://restcountries.com/v2/name/india`),
+    getJson(`https://restcountries.com/v2/name/korea`),
+  ]);
+  console.log(res);
 })();
+
+const promiseTimeout = () => {
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      resolve();
+    }, 3000);
+  });
+};
+
+console.log(promiseTimeout());

@@ -410,14 +410,15 @@ const whereAmIAsync = async () => {
 
 // get3Countries("india", "japan", "korea");
 
-const getJSON = function (country, tag) {
-  return fetch(`https://restcountries.com/v3.1/${tag}/${country}`)
-  .then(response => {
-    if (!response.ok) throw new Error(
-      `Country ${country}, or search type ${tag} is invalid or could not be found (${response.status})`)
-  return response.json()
-  }); // prettier-ignore
-};
+//////////////////////////udemy////////////////////////
+// const getJSON = function (country, tag) {
+//   return fetch(`https://restcountries.com/v3.1/${tag}/${country}`)
+//   .then(response => {
+//     if (!response.ok) throw new Error(
+//       `Country ${country}, or search type ${tag} is invalid or could not be found (${response.status})`)
+//   return response.json()
+//   }); // prettier-ignore
+// };
 
 // const getMultipleCountries = async function (...arrCountries) {
 //   try {
@@ -453,6 +454,7 @@ const getJSON = function (country, tag) {
 //     throw err;
 //   }
 // })();
+//////////////////////////////udemy/////////////////////
 
 /////////////////////promise race
 
@@ -465,12 +467,24 @@ const getJSON = function (country, tag) {
   console.log(res);
 })();
 
-const promiseTimeout = () => {
+function timeout(secs) {
   return new Promise(function (resolve, reject) {
     setTimeout(() => {
-      resolve();
-    }, 3000);
+      reject(new Error("took too long"));
+    }, secs * 1000);
   });
-};
+}
 
-console.log(promiseTimeout());
+(async function () {
+  Promise.race([
+    getJson(`https://restcountries.com/v2/name/tanzania`),
+    timeout(0),
+  ]).then((res) => console.log(res));
+})().catch((err) => console.error(err));
+
+// Promise.race([
+//   getJson(`https://restcountries.com/v2/name/tanzania`),
+//   timeout(1),
+// ])
+//   .then((res) => console.log(res))
+//   .catch((err) => console.error(err));

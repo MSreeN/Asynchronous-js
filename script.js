@@ -241,7 +241,7 @@ promise.then((res) => console.log(res)).catch((err) => console.error(err));
 
 const getPosition = () => {
   return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+    // navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
 console.log("from getPosition ", getPosition());
@@ -349,7 +349,7 @@ createImage("img/img-1.jpg")
 
 function getUserCoords() {
   return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+    // navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 }
 
@@ -373,11 +373,83 @@ const whereAmIAsync = async () => {
   console.log(data);
 };
 
-whereAmIAsync()
-  .then((res) => console.log("log from then method", res))
-  .catch((err) => {
-    console.log(`error from catch, ${err}`);
-  });
-console.log("after where am i async function ");
+// whereAmIAsync()
+//   .then((res) => console.log("log from then method", res))
+//   .catch((err) => {
+//     console.log(`error from catch, ${err}`);
+//   });
+// console.log("after where am i async function ");
+
 // const [promiseResult] = whereAmIAsync("india");
 // console.log(promiseResult);
+
+//////////////promises in parallel
+// function getJson(url, errorMsg = "Something went wrong") {
+//   return fetch(url).then((response) => {
+//     if (!response.ok) throw new Error(`${errorMsg} ${response.status}`);
+//     return response.json();
+//   });
+// }
+
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     // const [, data1] = await getJson(`https://restcountries.com/v2/name/${c1}`);
+//     // const [data2] = await getJson(`https://restcountries.com/v2/name/${c2}`);
+//     // const [data3] = await getJson(`https://restcountries.com/v2/name/${c3}`);
+//     // console.log(data1.capital, data2.capital, data3.capital);
+//     const data = await Promise.all([
+//       getJson(`https://restcountries.com/v2/name/${c1}`),
+//       getJson(`https://restcountries.com/v2/name/${c2}`),
+//       getJson(`https://restcountries.com/v2/name/${c3}`),
+//     ]);
+//     data.forEach((country) => console.log(country[0].capital));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+// get3Countries("india", "japan", "korea");
+
+const getJSON = function (country, tag) {
+  return fetch(`https://restcountries.com/v3.1/${tag}/${country}`)
+  .then(response => {
+    if (!response.ok) throw new Error(
+      `Country ${country}, or search type ${tag} is invalid or could not be found (${response.status})`)
+  return response.json()
+  }); // prettier-ignore
+};
+
+const getMultipleCountries = async function (...arrCountries) {
+  try {
+    const promiseHelper = (name) => getJSON(name, `name`);
+
+    const promises = [];
+    arrCountries.forEach((country) => promises.push(promiseHelper(country)));
+
+    const data = await (await Promise.all(promises)).flat();
+    data.forEach((country, i, arr) => (arr[i] = country.capital[0]));
+    // map didn't mutate the array which is why I use forEach()
+
+    return data;
+  } catch (err) {
+    console.error(`Error occured: ${err.message}`);
+    console.error(err);
+    throw err;
+  }
+};
+
+(async function () {
+  try {
+    console.log(
+      await getMultipleCountries(
+        `portugal`,
+        `canada`,
+        `tanzania`,
+        `South Africa`
+      )
+    );
+  } catch {
+    console.error(`Error occured: ${err.message}`);
+    throw err;
+  }
+})();

@@ -496,3 +496,10 @@ Promise.allSettled([
   Promise.resolve("resolved"),
   Promise.reject("rejected"),
 ]).then((res) => console.log(res));
+
+//////////////////////Promise.any
+Promise.any([
+  Promise.reject("resolved"),
+  Promise.reject("rejected"),
+  Promise.reject("rejected"),
+]).then((res) => console.log(res));

@@ -467,12 +467,13 @@ const whereAmIAsync = async () => {
   console.log(res);
 })();
 
+///////////////cancelling promises after certain time
 function timeout(secs) {
   return new Promise(function (resolve, reject) {
     setTimeout(() => {
       reject(new Error("took too long"));
     }, secs * 1000);
-  });
+  }).catch((err) => console.error(err));
 }
 
 (async function () {
@@ -480,7 +481,7 @@ function timeout(secs) {
     getJson(`https://restcountries.com/v2/name/tanzania`),
     timeout(0),
   ]).then((res) => console.log(res));
-})().catch((err) => console.error(err));
+})().catch((err) => console.error(err.message));
 
 // Promise.race([
 //   getJson(`https://restcountries.com/v2/name/tanzania`),
@@ -488,3 +489,10 @@ function timeout(secs) {
 // ])
 //   .then((res) => console.log(res))
 //   .catch((err) => console.error(err));
+
+////////////////////////promise allSettled
+
+Promise.allSettled([
+  Promise.resolve("resolved"),
+  Promise.reject("rejected"),
+]).then((res) => console.log(res));

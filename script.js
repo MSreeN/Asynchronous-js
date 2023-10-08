@@ -314,31 +314,31 @@ const wait = (seconds) => {
 
 let currentImage;
 // 4. Consume the promise using .then and also add an error handler
-createImage("img/img-1.jpg")
-  .then((img) => {
-    console.log(img);
-    currentImage = img;
-    // 5. After the image has loaded, pause execution for 2 seconds using the 'wait'
-    // function we created earlier
-    return wait(2);
-  })
-  .then(() => {
-    console.log("setting display");
-    // 6. After the 2 seconds have passed, hide the current image (set display CSS
-    // property to 'none'), and load a second image (Hint: Use the image element
-    // returned by the 'createImage' promise to hide the current image. You will
-    // need a global variable for that 😉)
-    currentImage.style.display = "none";
-    return createImage("img/img-2.jpg");
-  })
-  .then((img) => {
-    currentImage = img;
-    return wait(2);
-  })
-  .then(() => {
-    currentImage.style.display = "none";
-  })
-  .catch((err) => console.error(`${err}`));
+// createImage("img/img-1.jpg")
+//   .then((img) => {
+//     console.log(img);
+//     currentImage = img;
+//     // 5. After the image has loaded, pause execution for 2 seconds using the 'wait'
+//     // function we created earlier
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log("setting display");
+//     // 6. After the 2 seconds have passed, hide the current image (set display CSS
+//     // property to 'none'), and load a second image (Hint: Use the image element
+//     // returned by the 'createImage' promise to hide the current image. You will
+//     // need a global variable for that 😉)
+//     currentImage.style.display = "none";
+//     return createImage("img/img-2.jpg");
+//   })
+//   .then((img) => {
+//     currentImage = img;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImage.style.display = "none";
+//   })
+//   .catch((err) => console.error(`${err}`));
 // 7. After the second image has loaded, pause execution for 2 seconds again
 // 8. After the 2 seconds have passed, hide the current image
 // Test data: Images in the img folder. Test the error handler by passing a wrong
@@ -503,3 +503,82 @@ Promise.any([
   Promise.reject("rejected"),
   Promise.reject("rejected"),
 ]).then((res) => console.log(res));
+
+Promise.all([]).then((res) => console.log(res));
+
+// 1. Write an async function 'loadNPause' that recreates Challenge #2, this time
+// using async/await (only the part where the promise is consumed, reuse the
+// 'createImage' function from before)
+async function loadNPause() {
+  try {
+    let img = await createImage("img/img-1.jpg");
+    currentImage = img;
+    await wait(2);
+    currentImage.style.display = "none";
+
+    img = await createImage("img/img-2.jpg");
+    currentImage = img;
+    await wait(2);
+    currentImage.style.display = "none";
+  } catch (err) {
+    console.log(err);
+  }
+}
+loadNPause();
+// 2. Compare the two versions, think about the big differences, and see which one
+// you like more
+// 3. Don't forget to test the error handler, and to set the network speed to “Fast 3G”
+// in the dev tools Network tab
+// PART 2
+// 1. Create an async function 'loadAll' that receives an array of image paths
+// 'imgArr'
+// 2. Use .map to loop over the array, to load all the images with the
+// 'createImage' function (call the resulting array 'imgs')
+// 3. Check out the 'imgs' array in the console! Is it like you expected?
+// 4. Use a promise combinator function to actually get the images from the array 😉
+// 5. Add the 'parallel' class to all the images (it has some CSS styles)
+// Test data Part 2: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-
+// 3.jpg']. To test, turn off the 'loadNPause' function
+
+// let currentImage;
+// // 4. Consume the promise using .then and also add an error handler
+// createImage("img/img-1.jpg")
+//   .then((img) => {
+//     console.log(img);
+//     currentImage = img;
+//     // 5. After the image has loaded, pause execution for 2 seconds using the 'wait'
+//     // function we created earlier
+//     return wait(2);
+//   })
+//   .then(() => {
+//     console.log("setting display");
+//     // 6. After the 2 seconds have passed, hide the current image (set display CSS
+//     // property to 'none'), and load a second image (Hint: Use the image element
+//     // returned by the 'createImage' promise to hide the current image. You will
+//     // need a global variable for that 😉)
+//     currentImage.style.display = "none";
+//     return createImage("img/img-2.jpg");
+//   })
+//   .then((img) => {
+//     currentImage = img;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImage.style.display = "none";
+//   })
+//   .catch((err) => console.error(`${err}`));
+
+// function createImage(imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const imageEle = document.createElement("img");
+//     imageEle.src = imgPath;
+
+//     imageEle.addEventListener("load", function (e) {
+//       resolve(imageEle);
+//       imageContainer.insertAdjacentElement("beforebegin", imageEle);
+//     });
+//     imageEle.addEventListener("error", function (e) {
+//       reject(new Error("Image not found"));
+//     });
+//   });
+// }

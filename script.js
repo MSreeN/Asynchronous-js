@@ -286,7 +286,7 @@ function whereAmI(lat, lng) {
 // document.createElement('img')) and sets the .src attribute to the
 // provided image path
 const imageContainer = document.querySelector(".images");
-
+// console.log(imageContainer);
 function createImage(imgPath) {
   return new Promise(function (resolve, reject) {
     const imageEle = document.createElement("img");
@@ -297,8 +297,8 @@ function createImage(imgPath) {
     // image element itself. In case there is an error loading the image (listen for
     // the'error' event), reject the promise
     imageEle.addEventListener("load", function (e) {
+      imageContainer.insertAdjacentElement("afterbegin", imageEle);
       resolve(imageEle);
-      imageContainer.insertAdjacentElement("beforebegin", imageEle);
     });
     imageEle.addEventListener("error", function (e) {
       reject(new Error("Image not found"));
@@ -476,12 +476,12 @@ function timeout(secs) {
   }).catch((err) => console.error(err));
 }
 
-(async function () {
-  Promise.race([
-    getJson(`https://restcountries.com/v2/name/tanzania`),
-    timeout(0),
-  ]).then((res) => console.log(res));
-})().catch((err) => console.error(err.message));
+// (async function () {
+//   Promise.race([
+//     getJson(`https://restcountries.com/v2/name/tanzania`),
+//     timeout(0),
+//   ]).then((res) => console.log(res));
+// })().catch((err) => console.error(err.message));
 
 // Promise.race([
 //   getJson(`https://restcountries.com/v2/name/tanzania`),
@@ -492,19 +492,19 @@ function timeout(secs) {
 
 ////////////////////////promise allSettled
 
-Promise.allSettled([
-  Promise.resolve("resolved"),
-  Promise.reject("rejected"),
-]).then((res) => console.log(res));
+// Promise.allSettled([
+//   Promise.resolve("resolved"),
+//   Promise.reject("rejected"),
+// ]).then((res) => console.log(res));
 
-//////////////////////Promise.any
-Promise.any([
-  Promise.reject("resolved"),
-  Promise.reject("rejected"),
-  Promise.reject("rejected"),
-]).then((res) => console.log(res));
+// //////////////////////Promise.any
+// Promise.any([
+//   Promise.reject("resolved"),
+//   Promise.reject("rejected"),
+//   Promise.reject("rejected"),
+// ]).then((res) => console.log(res));
 
-Promise.all([]).then((res) => console.log(res));
+// Promise.all([]).then((res) => console.log(res));
 
 // 1. Write an async function 'loadNPause' that recreates Challenge #2, this time
 // using async/await (only the part where the promise is consumed, reuse the
@@ -524,7 +524,7 @@ async function loadNPause() {
     console.log(err);
   }
 }
-loadNPause();
+// loadNPause();
 // 2. Compare the two versions, think about the big differences, and see which one
 // you like more
 // 3. Don't forget to test the error handler, and to set the network speed to “Fast 3G”
@@ -532,6 +532,17 @@ loadNPause();
 // PART 2
 // 1. Create an async function 'loadAll' that receives an array of image paths
 // 'imgArr'
+
+async function loadAll(arr) {
+  try {
+    const imgs = arr.map(async (ele) => await createImage(ele));
+    console.log(imgs);
+    const data = await Promise.all(imgs);
+    console.log(data);
+    data.forEach((ele) => ele.classList.add("parallel"));
+  } catch (error) {}
+}
+loadAll(["img/img-2.jpg", "img/img-2.jpg"]);
 // 2. Use .map to loop over the array, to load all the images with the
 // 'createImage' function (call the resulting array 'imgs')
 // 3. Check out the 'imgs' array in the console! Is it like you expected?
